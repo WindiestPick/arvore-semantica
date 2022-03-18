@@ -1,60 +1,88 @@
 from Vaso import Vaso
 from Regra import Regras
 
+#FUNÇÃO RECURSIVA RESPONSAVEL POR TENTAR TODAS AS POSSIBILIDADES
+#ATÉ NÃO TER MAIS NENHUMA POSSIBILIDADE NOVA POSSIVEL
 def testador(memoria, f, cache):
-    regras.encheV1()
-    if ([vaso1.getVolume(), vaso2.getVolume()] != memoria[f]):
-        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
-            cache.append([vaso1.getVolume(), vaso2.getVolume()])
-            memoria[f].append(testador(memoria, f, cache))
-            f += 1
-            regras.esvaziaV1
+    if (f == 0):
+        print("\n\n---------------INICIO---------------- \n\n")
 
-    regras.esvaziaV1()
-    if ([vaso1.getVolume(), vaso2.getVolume()] != memoria[f]):
-        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
-            cache.append([vaso1.getVolume(), vaso2.getVolume()])
-            memoria[f].append(testador(memoria, f, cache))
-            f += 1
-            regras.esvaziaV1
-        
-    regras.encheV2()
-    if ([vaso1.getVolume(), vaso2.getVolume()] != memoria[f]):
-        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
-            cache.append([vaso1.getVolume(), vaso2.getVolume()])
-            memoria[f].append(testador(memoria, f, cache))
-            f += 1
-            regras.esvaziaV2
+    else:
+        vaso1.setVolume(cache[f-1][0])
+        vaso2.setVolume(cache[f-1][1])
+        memoria = []
+        print("Estado Atual :",[vaso1.getVolume(), vaso2.getVolume()])
+        print("Resultados Possives : ", end="")
+        regras.encheV1()
 
-    regras.esvaziaV2()
-    if ([vaso1.getVolume(), vaso2.getVolume()] != memoria[f]):
         if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
             cache.append([vaso1.getVolume(), vaso2.getVolume()])
-            memoria[f].append(testador(memoria, f, cache))
-            f += 1
-            regras.esvaziaV2
-        
-    regras.despejarV1noV2()
-    if ([vaso1.getVolume(), vaso2.getVolume()] != memoria[f]):
-        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
-            cache.append([vaso1.getVolume(), vaso2.getVolume()])
-            memoria[f].append(testador(memoria, f, cache))
-            f += 1
-            regras.esvaziaV2
-            regras.esvaziaV1
-
-    regras.despejarV2noV1()
-    if ([vaso1.getVolume(), vaso2.getVolume()] != memoria[f]):
-        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
-            cache.append([vaso1.getVolume(), vaso2.getVolume()])
-            memoria[f].append(testador(memoria, f))
-            f += 1
-            regras.esvaziaV1
-            regras.esvaziaV2
-
-    return memoria
-        
+            memoria.append([vaso1.getVolume(), vaso2.getVolume()])
     
+        print([vaso1.getVolume(), vaso2.getVolume()], end="")     
+        vaso1.setVolume(cache[f-1][0])
+
+        regras.esvaziaV1()
+        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
+            cache.append([vaso1.getVolume(), vaso2.getVolume()])
+            memoria.append([vaso1.getVolume(), vaso2.getVolume()])
+    
+        print([vaso1.getVolume(), vaso2.getVolume()], end="")
+        vaso1.setVolume(cache[f-1][0])
+        
+        regras.encheV2()
+        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
+            cache.append([vaso1.getVolume(), vaso2.getVolume()])
+            memoria.append([vaso1.getVolume(), vaso2.getVolume()])
+    
+        print([vaso1.getVolume(), vaso2.getVolume()], end="")
+        vaso2.setVolume(cache[f-1][1])
+
+        regras.esvaziaV2()
+        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
+            cache.append([vaso1.getVolume(), vaso2.getVolume()])
+            memoria.append([vaso1.getVolume(), vaso2.getVolume()])
+    
+        print([vaso1.getVolume(), vaso2.getVolume()], end="")
+        vaso2.setVolume(cache[f-1][1])
+
+        regras.despejarV1noV2()
+        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
+            cache.append([vaso1.getVolume(), vaso2.getVolume()])
+            memoria.append([vaso1.getVolume(), vaso2.getVolume()])
+    
+        print([vaso1.getVolume(), vaso2.getVolume()], end="")
+        vaso1.setVolume(cache[f-1][0])
+        vaso2.setVolume(cache[f-1][1])
+
+        regras.despejarV2noV1()
+        if perList(cache, [vaso1.getVolume(), vaso2.getVolume()]):
+            cache.append([vaso1.getVolume(), vaso2.getVolume()])
+            memoria.append([vaso1.getVolume(), vaso2.getVolume()])
+        
+        print([vaso1.getVolume(), vaso2.getVolume()], end="")
+        vaso1.setVolume(cache[f-1][0])
+        vaso2.setVolume(cache[f-1][1])
+
+            
+    
+        print("\nNovos Resultados : ", end="")
+        if memoria == []:
+            print("Nenhum novo resultado")
+        else:
+            print(memoria)
+        print('\n-----------------------------------')
+
+    f += 1
+    if (len(cache) < f):
+        return 0
+
+    return(testador(memoria, f, cache))
+
+    
+        
+# funão responsavel por percorrer a "cache" e 
+#retornar se a possibilidade ja foi encontrada antes
 def perList(list, x):
     for i in range(len(list) - 1):
         if (x == list[i]):
@@ -80,13 +108,10 @@ regras.setVaso2(vaso2)
 #____________Execução______________
 f = 0
 cache = [[0,0]]
-memoria = []
-memoria.append([0,0])
+memoria = [[0,0]]
 
 
-result = testador(memoria, f, cache)
+testador(memoria, f, cache)
 
-for i in range(len(result)):
-    for j in range(len(result[i])):
-        print(result[j])
+
     
